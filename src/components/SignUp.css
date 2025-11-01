@@ -1,0 +1,54 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: white;
+}
+
+.input-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid black;
+  padding: 30px;
+  border-radius: 10px;
+  width: 300px;
+}
+
+.email-input,
+.password-input,
+.confirm-input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.signup-btn {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.login-btn {
+  background-color: lightgreen;
+  color: black;
+  border: black;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
