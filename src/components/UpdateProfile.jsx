@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./UpdateProfile.css";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +6,49 @@ const UpdateProfile = () => {
   const [name, setName] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const navigate = useNavigate();
+
+  // Fetch profile data 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("User not authenticated. Please log in again.");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyB-WP2T5JiViDvl3gsbMToJV_zFzn9JL6Y",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ idToken: token }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          console.log("Fetch error:", data);
+          alert("Failed to fetch profile details!");
+          return;
+        }
+
+        // Prfill user data
+        const user = data.users[0];
+        setName(user.displayName || "");
+        setPhotoUrl(user.photoUrl || "");
+      } catch (err) {
+        console.error("Fetch Error:", err);
+        alert("Something went wrong while fetching profile!");
+      }
+    };
+
+    fetchProfile();
+  }, [navigate]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -48,7 +91,6 @@ const UpdateProfile = () => {
       }
 
       alert("Profile updated successfully!");
-      console.log(data)
       localStorage.setItem("token", data.idToken);
       navigate("/home");
     } catch (err) {
