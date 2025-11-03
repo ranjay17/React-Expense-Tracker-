@@ -22,7 +22,7 @@ const SignUp = () => {
     }
 
     try {
-      // ✅ Firebase REST signup API
+      // Firebase REST signup API
       const res = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB-WP2T5JiViDvl3gsbMToJV_zFzn9JL6Y",
         {
