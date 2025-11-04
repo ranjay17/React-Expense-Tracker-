@@ -1,8 +1,9 @@
 import React from "react";
 import "./Home.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate()
   const handleVerifyEmail = async () => {
     try {
       const idToken = localStorage.getItem("token");
@@ -50,8 +51,19 @@ const Home = () => {
     }
   };
 
+  const handleLogout = () =>{
+    localStorage.removeItem("token")
+    navigate('/login')
+    alert("Logout successfully!")
+  }
+
   return (
     <div className="home-container">
+      <div className="logout-container">
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
       <h1>Welcome to Expense Tracker!!</h1>
       <Link to="/update">
         <button className="complete-btn">

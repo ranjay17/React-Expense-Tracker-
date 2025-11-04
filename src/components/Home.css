@@ -26,3 +26,19 @@
   font-size: 14px;
   cursor: pointer;
 }
+
+.logout-container {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px;
+}
+
+.logout-btn {
+  background-color: #e63946;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
