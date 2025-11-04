@@ -1,0 +1,28 @@
+.expense-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.expense-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.expense-form input,
+.expense-form select,
+.expense-form button {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.expense-list {
+  margin-top: 20px;
+}
+
+.expense-item {
+  list-style: none;
+  margin-bottom: 10px;
+  font-size: 16px;
+}

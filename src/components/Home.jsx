@@ -1,9 +1,11 @@
 import React from "react";
 import "./Home.css";
 import { Link, useNavigate } from "react-router-dom";
+import ExpenseTracking from "./ExpenseTracking";
 
 const Home = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const handleVerifyEmail = async () => {
     try {
       const idToken = localStorage.getItem("token");
@@ -33,17 +35,8 @@ const Home = () => {
         alert("Verification email sent successfully! Check your inbox.");
         console.log("Response:", data);
       } else {
-        // Firebase error codes handle
-        switch (data.error.message) {
-          case "INVALID_ID_TOKEN":
-            alert("Your session expired. Please login again.");
-            break;
-          case "USER_NOT_FOUND":
-            alert("User not found. Please register again.");
-            break;
-          default:
-            alert(`Error: ${data.error.message}`);
-        }
+        const msg = data.error?.message?.replace(/_/g, " ") || "Unknown error";
+        alert(`Error: ${msg}`);
       }
     } catch (error) {
       console.error(error);
@@ -51,29 +44,35 @@ const Home = () => {
     }
   };
 
-  const handleLogout = () =>{
-    localStorage.removeItem("token")
-    navigate('/login')
-    alert("Logout successfully!")
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+    alert("Logout successfully!");
+  };
 
   return (
     <div className="home-container">
-      <div className="logout-container">
+      <div className="home-header">
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>
-      </div>
-      <h1>Welcome to Expense Tracker!!</h1>
-      <Link to="/update">
-        <button className="complete-btn">
-          Your Profile is incomplete. Complete now
-        </button>
-      </Link>
-      <div>
+        <h1>Welcome to Expense Tracker!!</h1>
+
+        <Link to="/update">
+          <button className="complete-btn">
+            Your Profile is incomplete. Complete now
+          </button>
+        </Link>
+
         <button className="verify-btn" onClick={handleVerifyEmail}>
           Verify Email
         </button>
+      </div>
+      <div>
+        <hr className="divider" />
+      </div>
+      <div className="expense-section">
+        <ExpenseTracking />
       </div>
     </div>
   );

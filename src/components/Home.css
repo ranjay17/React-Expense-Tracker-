@@ -2,7 +2,6 @@
   width: 80%;
   margin: 50px auto;
   border-bottom: 2px solid black;
-  display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 10px;
@@ -21,6 +20,7 @@
 .verify-btn{
   background-color: brown;
   color: white;
+  margin-left: 5px;
   border-radius: 4px;
   padding: 8px 14px;
   font-size: 14px;
@@ -37,6 +37,7 @@
   background-color: #e63946;
   color: white;
   border: none;
+  margin-right: 5px;
   padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
