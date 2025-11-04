@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ExpenseTracking.css";
+import axios from "axios";
 
 const ExpenseTracking = () => {
   const [amount, setAmount] = useState("");
@@ -7,7 +8,31 @@ const ExpenseTracking = () => {
   const [category, setCategory] = useState("");
   const [expenses, setExpenses] = useState([]);
 
-  const handleAddExpense = (e) => {
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const response = await axios.get(
+          "https://expense-tracker-a1e6c-default-rtdb.firebaseio.com/expenses.json"
+        );
+        if (response.status === 200 && response.data) {
+          // Firebase returns object, convert to array
+          const fetchedExpenses = Object.entries(response.data).map(
+            ([key, value]) => ({
+              id: key,
+              ...value,
+            })
+          );
+          setExpenses(fetchedExpenses.reverse());
+        }
+      } catch (error) {
+        console.error("Error fetching expenses:", error);
+      }
+    };
+
+    fetchExpenses();
+  }, []);
+
+  const handleAddExpense = async (e) => {
     e.preventDefault();
 
     if (!amount || !description || !category) {
@@ -16,16 +41,31 @@ const ExpenseTracking = () => {
     }
 
     const newExpense = {
-      id: Date.now(),
       amount,
       description,
       category,
+      date: new Date().toLocaleString(),
     };
 
-    setExpenses((prev) => [...prev, newExpense]);
-    setAmount("");
-    setDescription("");
-    setCategory("");
+    try {
+      const response = await axios.post(
+        "https://expense-tracker-a1e6c-default-rtdb.firebaseio.com/expenses.json",
+        newExpense
+      );
+
+      if (response.status === 200) {
+        const savedExpense = { id: response.data.name, ...newExpense };
+        setExpenses((prev) => [savedExpense, ...prev]);
+        setAmount("");
+        setDescription("");
+        setCategory("");
+      } else {
+        alert("Failed to add expense. Try again!");
+      }
+    } catch (error) {
+      console.error("Error adding expense:", error);
+      alert("Something went wrong!");
+    }
   };
 
   return (
@@ -58,6 +98,7 @@ const ExpenseTracking = () => {
       <hr />
 
       <div className="expense-list">
+        <h3>Expense List</h3>
         {expenses.length === 0 ? (
           <p>No expenses added yet.</p>
         ) : (
@@ -65,7 +106,7 @@ const ExpenseTracking = () => {
             {expenses.map((exp) => (
               <li key={exp.id} className="expense-item">
                 <strong>₹{exp.amount}</strong> — {exp.description} (
-                {exp.category})
+                {exp.category}) <small> {exp.date}</small>
               </li>
             ))}
           </ul>
