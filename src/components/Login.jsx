@@ -81,11 +81,13 @@ const Login = () => {
           Login
         </button>
 
-        <button type="button" className="forgot-btn">
-          Forgot Password
-        </button>
+        <Link to="/forgot-password">
+          <button type="button" className="forgot-btn">
+            Forgot Password
+          </button>
+        </Link>
 
-        <Link to='/signup'>
+        <Link to="/signup">
           <button type="button" className="signup-btn">
             Don't have an account? Signup
           </button>
