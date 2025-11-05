@@ -26,3 +26,24 @@
   margin-bottom: 10px;
   font-size: 16px;
 }
+
+.delete-btn {
+  background-color: red;
+  margin-right: 8px;
+  padding: 5px 10px;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: silver;;
+  margin-left: 8px;
+  padding: 5px 10px;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+

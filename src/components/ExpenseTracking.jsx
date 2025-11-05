@@ -7,6 +7,10 @@ const ExpenseTracking = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [expenses, setExpenses] = useState([]);
+  const [editingExpense, setEditingExpense] = useState(null);
+  const [editAmount, setEditAmount] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editCategory, setEditCategory] = useState("");
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -68,6 +72,56 @@ const ExpenseTracking = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("Please login first");
+
+    try {
+      await axios.delete(
+        `https://expense-tracker-a1e6c-default-rtdb.firebaseio.com/expenses/${id}.json?auth=${token}`
+      );
+      console.log("Expense successfully deleted");
+      setExpenses((prev) => prev.filter((exp) => exp.id !== id));
+    } catch (error) {
+      console.error("Error deleting expense:", error);
+    }
+  };
+
+  const handleEdit = (expense) => {
+    setEditingExpense(expense);
+    setEditAmount(expense.amount);
+    setEditDescription(expense.description);
+    setEditCategory(expense.category);
+  };
+
+  const handleUpdate = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("Please login first");
+
+    const updatedExpense = {
+      amount: editAmount,
+      description: editDescription,
+      category: editCategory,
+      date: new Date().toLocaleString(),
+    };
+
+    try {
+      await axios.put(
+        `https://expense-tracker-a1e6c-default-rtdb.firebaseio.com/expenses/${editingExpense.id}.json?auth=${token}`,
+        updatedExpense
+      );
+      console.log("Expense successfully updated");
+      setExpenses((prev) =>
+        prev.map((exp) =>
+          exp.id === editingExpense.id ? { ...exp, ...updatedExpense } : exp
+        )
+      );
+      setEditingExpense(null);
+    } catch (error) {
+      console.error("Error updating expense:", error);
+    }
+  };
+
   return (
     <div className="expense-container">
       <h2>Add Daily Expense</h2>
@@ -103,13 +157,44 @@ const ExpenseTracking = () => {
           <p>No expenses added yet.</p>
         ) : (
           <ul>
-            {expenses.map((exp) => (
-              <li key={exp.id} className="expense-item">
-                <strong>₹{exp.amount}</strong> — {exp.description} (
-                {exp.category}) <small> {exp.date}</small>
-              </li>
+            {expenses.map((expense) => (
+              <div key={expense.id} className="expense-item">
+                <p>
+                  <strong>{expense.description}</strong> - ₹{expense.amount} (
+                  {expense.category})
+                </p>
+                <button onClick={() => handleEdit(expense)} className="edit-btn">Edit</button>
+                <button onClick={() => handleDelete(expense.id)} className="delete-btn">Delete</button>
+              </div>
             ))}
           </ul>
+        )}
+      </div>
+      <div>
+        {editingExpense && (
+          <div className="edit-form">
+            <h3>Edit Expense</h3>
+            <input
+              type="number"
+              value={editAmount}
+              onChange={(e) => setEditAmount(e.target.value)}
+              placeholder="Amount"
+            />
+            <input
+              type="text"
+              value={editDescription}
+              onChange={(e) => setEditDescription(e.target.value)}
+              placeholder="Description"
+            />
+            <input
+              type="text"
+              value={editCategory}
+              onChange={(e) => setEditCategory(e.target.value)}
+              placeholder="Category"
+            />
+            <button onClick={handleUpdate}>Submit</button>
+            <button onClick={() => setEditingExpense(null)}>Cancel</button>
+          </div>
         )}
       </div>
     </div>
