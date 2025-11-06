@@ -47,3 +47,40 @@
   cursor: pointer;
 }
 
+.dark-theme {
+  background-color: #121212;
+  color: white;
+}
+
+.premium-btn,
+.toggle-btn,
+.download-btn {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.premium-btn {
+  background-color: gold;
+  color: black;
+}
+
+.toggle-btn {
+  background-color: #444;
+  color: white;
+}
+
+.download-btn {
+  background-color: #008cff;
+  color: white;
+  text-decoration: none;
+}
+
+.premium-features {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+

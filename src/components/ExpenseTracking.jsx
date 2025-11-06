@@ -7,6 +7,8 @@ import {
   deleteExpense,
   updateExpense,
 } from "../redux/expensesSlice";
+import { activatePremium, toggleTheme } from "../redux/ThemeSlice";
+import { CSVLink } from "react-csv";
 import "./ExpenseTracking.css";
 
 const ExpenseTracking = () => {
@@ -19,6 +21,7 @@ const ExpenseTracking = () => {
   const { list: expenses, premiumActive } = useSelector(
     (state) => state.expenses
   );
+  const { isPremiumActivated, theme } = useSelector((state) => state.theme);
 
   const firebaseURL =
     "https://expense-tracker-a1e6c-default-rtdb.firebaseio.com/expenses.json";
@@ -76,8 +79,14 @@ const ExpenseTracking = () => {
     setEditId(exp.id);
   };
 
+  const handleActivatePremium = () => {
+    dispatch(activatePremium());
+  };
+
   return (
-    <div className="expense-container">
+    <div
+      className={`expense-container ${theme === "dark" ? "dark-theme" : ""}`}
+    >
       <h2>Add Daily Expense</h2>
 
       <form className="expense-form" onSubmit={handleSubmit}>
@@ -104,8 +113,31 @@ const ExpenseTracking = () => {
         <button type="submit">{editId ? "Update" : "Add"}</button>
       </form>
 
-      {premiumActive && (
-        <button className="premium-btn">🌟 Activate Premium 🌟</button>
+      {/* Show Activate Premium only when total > 10k */}
+      {premiumActive && !isPremiumActivated && (
+        <button className="premium-btn" onClick={handleActivatePremium}>
+          🌟 Activate Premium 🌟
+        </button>
+      )}
+
+      {/* Show extra features only after activation */}
+      {isPremiumActivated && (
+        <div className="premium-features">
+          <button
+            onClick={() => dispatch(toggleTheme())}
+            className="toggle-btn"
+          >
+            Toggle {theme === "light" ? "Dark" : "Light"} Mode
+          </button>
+
+          <CSVLink
+            data={expenses}
+            filename={"expenses.csv"}
+            className="download-btn"
+          >
+            Download Expenses (CSV)
+          </CSVLink>
+        </div>
       )}
 
       <div className="expense-list">
